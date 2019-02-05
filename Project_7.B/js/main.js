@@ -2,38 +2,22 @@ $(document).ready(function () {
 
 });
 
-
-
 /*
 Существует Товар, Производитель Товара, Потребитель Товара и Посредник,
-
 между Производителем и Потребителем Товара.
-
 Каждый день Производитель Товара создаёт 50-150 Шт. Товара.
-
 Каждый день у Потребителя возникает необходимость в 70-120 Шт. Товара.
-
 Посредник за один день может доставить Максимум 100 Шт. Товара.
-
 Необходимо смоделировать Движение Товара за 10 дней и вывести в табличной форме результаты.
-
 Колво Товара у Производителя.
-
 Колво Необходимого Потребителю Товара.
-
 Колво доставленного Товара за День.
-
 Колво произведенного товара за последние 3 дня.
-
 Колво доставленного товара за последние 3 дня.
-
 КПД Посредника.
-
 Любой Объект должен быть Экземпляром Класса.
-
 Чтение и модификация свойств Объектов извне должны быть реализованы через Методы.
 */
-
 
 
 // !!!КЛАСС ГЕНЕРАТОР СЛУЧАНЫХ ЧИСЕЛ!!!
@@ -45,83 +29,35 @@ function Generetor() {
 
 	this.setGenerateRandomNumber = function(min, max) {
 		randomNumber = Math.floor(min + Math.random() * (max + 1 - min));
+		return randomNumber;
 	};
 
 	this.getGenerateRandomNumber = function() {
 		return randomNumber;
 	};
-
-}
-
-/*
-	var generetor = new Generetor();
-	generetor.setGenerateRandomNumber(50, 150);
-	alert(generetor.getGenerateRandomNumber());
-*/
-// !!!КЛАСС ГЕНЕРАТОР СЛУЧАНЫХ ЧИСЕЛ!!!
-
+};
 
 
 // !!!КЛАСС ПРОИЗВОДИТЕЛЬ / ПРОИЗВОДСТВО!!!
-function Manufacture() {
+function Manufacturer() {
 
 	var goodsProducedToday = 0,	// количество произведённых товаров в конкретный день
-	goodsProducedTotal = 0,	// общее количество произведённых товаров
-	goodsOnStock = 0; // количество товара на Складе, можно убрать, так как непонятно нужно ли это
-	
-	// для доступа к объекту из внутреннего метода
-	var self = this;
+	goodsProducedTotal = 0;	// общее количество произведённых товаров
 	
 	// получить количество произведённого товара сегодня
-	function countGoodsProducedToday() {
+	this.getCountGoodsProducedToday = function() {
 		var generetor = new Generetor();
 		generetor.setGenerateRandomNumber(50, 150);
 		goodsProducedToday = generetor.getGenerateRandomNumber();
-	}
-	countGoodsProducedToday();
-	
-	// получить количество произведённого товара за всё время
-	function countGoodsProducedTotal() {
-		goodsProducedTotal += goodsProducedToday;
-		return goodsProducedTotal;
-	}
-	countGoodsProducedTotal();
-
-
-	
-	// ?????временное решение?????
-	function getGoodsOnStock(_goodsProducedToday, _goodsDeliverToday) {
-
-		if (_goodsProducedToday > _goodsDeliverToday) {
-			goodsOnStock = _goodsProducedToday - _goodsDeliverToday;
-		}
-
-		else {
-			goodsOnStock = 0;
-		}
-
-		return goodsOnStock;
-	}
-
-
-
-	// для получения доступа к методу из вне
-	this.getGoodsProducedToday = function() {
 		return goodsProducedToday;
 	};
-
-	this.getcountGoodsProducedTotal = function() {
+	
+	// получить количество произведённого товара за всё время
+	this.getCountGoodsProducedTotal = function() {
+		goodsProducedTotal += goodsProducedToday;
 		return goodsProducedTotal;
 	};
-
 };
-
-/*
-var newManufacture = new Manufacture();
-console.log(newManufacture.getGoodsProducedToday());
-console.log(newManufacture.getcountGoodsProducedTotal());
-*/
-
 
 
 // !!!КЛАСС ПОТРЕБИТЕЛЬ!!!
@@ -130,31 +66,19 @@ function Consumer() {
 	var goodsNeedToday = 0,	// счетчик необходимых товаров сегодня
 	goodsNeedTotal = 0;	// счетчик необходимых товаров всего
 	
-	// для доступа к объекту из внутреннего метода
-	var self = this;
-
 	// получить количество необходимого товара сегодня
-	function countGoodsNeedToday() {
+	this.getCountGoodsNeedToday = function() {
 		var generetor = new Generetor();
 		generetor.setGenerateRandomNumber(70, 120);
 		goodsNeedToday = generetor.getGenerateRandomNumber();
-	}
-	countGoodsNeedToday();
-
-	// получить количество необходимого товара за всё время
-	function countGoodsNeedTotal() {
-		goodsNeedTotal += goodsNeedToday;
-	}
-	countGoodsNeedTotal();
-
-	this.getCountGoodsNeedToday = function() {
 		return goodsNeedToday;
 	};
 
+	// получить количество необходимого товара за всё время
 	this.getCountGoodsNeedTotal = function() {
+		goodsNeedTotal += goodsNeedToday;
 		return goodsNeedTotal;
 	};
-
 };
 
 /*
@@ -164,11 +88,9 @@ console.log(newConsumer.getCountGoodsNeedTotal());
 */
 
 
-
-// Класс Посредник
+// !!!КЛАСС ПОСРЕДНИК!!!
 function Middleman() {
 
-	// приватные свойства:
 	const MAXIMUMDELIVER = 100;
 
 	var goodsDeliverToday = 0,	// счетчик необходимых товаров сегодня
@@ -176,15 +98,8 @@ function Middleman() {
 	KPD = 0, 
 	SummKPD = 0;
 
-	
-			
-	// получить количество необходимого товара сегодня
-	function getMaximumDeliverGoods() {
-		return MAXIMUMDELIVER;
-	}
-
 	// получить количество доставленных товаров за сегодня
-	function getCountGoodsDeliverToday(_goodsProducedToday, _goodsNeedToday) {
+	this.getCountGoodsDeliverToday = function(_goodsProducedToday, _goodsNeedToday) {
 
 		// если дневная потребность Меньше Произведённого за день
 		if (_goodsNeedToday < _goodsProducedToday) {
@@ -203,7 +118,7 @@ function Middleman() {
 				
 				// доставим ТОвару, сколько Максимально сможем (100 штук)
 				goodsDeliverToday = MAXIMUMDELIVER;
-				KPD = 100*(MAXIMUMDELIVER / _goodsNeedToday);
+				KPD = 100 * (MAXIMUMDELIVER / _goodsNeedToday);
 			}
 		}
 
@@ -226,78 +141,96 @@ function Middleman() {
 
 		SummKPD = SummKPD + KPD;	// здесь наращивается КПД, чтобы потом посчитать среднее
 		return goodsDeliverToday;
-	}
+	};
 	
 	// получить КПД Посредника
-	function getKPD()	{
+	this.getKPD = function()	{
 		return SummKPD;
-	}
+	};
 
 	// получить количество доставленных товаров за всё время
-	function getCountGoodsDeliverTotal() {
+	this.getCountGoodsDeliverTotal = function() {
 		goodsDeliverTotal = goodsDeliverTotal + goodsDeliverToday;
 		return goodsDeliverTotal;
-	}
-
+	};
 };
 
 
-
-// Основная функция!!!
-function main() {
-
-	/*
-	Manufacture manufacture;	// экземпляр класса Производитель
-	Consumer consumer;	// экземпляр класса Производитель
-	Middleman middleman;	// экземпляр класса Посредник
-	*/
-
-	var Dni = 10,	// количество Дней Для формирования отчёта
+// !!!КЛАСС ОТЧЕТ!!!
+function Report() {
+	var consumer = new Consumer(),
+	manufacturer = new Manufacturer(),
+	middleman = new Middleman();
+	
+	var Days = 10,	// количество Дней Для формирования отчёта
 	goodsProducedToday,	// количество произведённых за день товаров
 	goodsProducedTotal,	// общее Количество произведённых товаров на день отчёта
 	goodsNeedToday,		// количество ежедневной потребности в товарах
 	goodsNeedTotal,		// количество общей потребности в товарах за период
 	goodsDeliverToday,	// количество товаров доставленных за сегодняшний день
 	goodsDeliverTotal,	// количество доставленных товаров на день отчёта
-	goodsOnStock,	// количество товаров на складе
-	KPD_Middleman,	// КПД посредника
-	goodsProduced_3_Day = 0,	// количество произведённого товара за последние 3 Дня
-	goodsDeliver_3_Day = 0;	// количество доставленного товара за последние 3 Дня
+	
+	KPDMiddleman,	// КПД посредника
+	goodsProducedThreeDay = 0,	// количество произведённого товара за последние 3 Дня
+	goodsDeliverThreeDay = 0;	// количество доставленного товара за последние 3 Дня
 		
-	for (let i = 1; i <= Dni; i++) {
-		goodsProducedToday = manufacture.getCountGoodsProducedToday();
-		goodsProducedTotal = manufacture.getCountGoodsProducedTotal();
+	for (let i = 1; i <= Days; i++) {
+		goodsProducedToday = manufacturer.getCountGoodsProducedToday();
+		goodsProducedTotal = manufacturer.getCountGoodsProducedTotal();
+
 		goodsNeedToday = consumer.getCountGoodsNeedToday();
 		goodsNeedTotal = consumer.getCountGoodsNeedTotal();
+
 		goodsDeliverToday = middleman.getCountGoodsDeliverToday(goodsProducedToday, goodsNeedToday);
 		goodsDeliverTotal = middleman.getCountGoodsDeliverTotal();
-		goodsOnStock = manufacture.getGoodsOnStock(goodsProducedToday, goodsDeliverToday);	// удалить НАХРЕН!!!
-		KPD_Middleman = middleman.getKPD() / i;	// ищем среднее Арифметическое из всех КПД
+
+		KPDMiddleman = middleman.getKPD() / i;	// ищем среднее Арифметическое из всех КПД
 			
-		if(i > Dni - 3 && i <= Dni) {
-			goodsProduced_3_Day = goodsProduced_3_Day + goodsProducedToday;
-			goodsDeliver_3_Day = goodsDeliver_3_Day + goodsDeliverToday;
+		if(i > Days - 3 && i <= Days) {
+			goodsProducedThreeDay += goodsProducedToday;
+			goodsDeliverThreeDay += goodsDeliverToday;
 		}
+
 		// день: i
 		// количество Произведённого за i-й день товара:  goodsProducedToday
 		// количество Необходимого в i-й день товара: goodsNeedToday
 		// количество Доставленного за i-й день товара: goodsDeliverToday
+
 		// общее Количество Произведённого за i дня товара: goodsProducedTotal
 		// общее Количество Необходимого за i дня товара: goodsNeedTotal
 		// общее Количество Доставленного за i дня товара: goodsDeliverTotal
-		// кол-во Товара на складе у Производителя i-й день: goodsOnStock
-		// коэффициент Полезного Действия Посредника: KPD_Middleman
-			
-		// формирование Отчёта Итогового, который требуется по условиям задачи
-		if (i == Dni) {
+		
+		// коэффициент Полезного Действия Посредника: KPDMiddleman
+
+		console.log(`ДЕНЬ: ${i}`);
+		console.log(`Количество Произведённого за ${i}-й день товара: ${goodsProducedToday}`);
+		console.log(`Количество Доставленного за ${i}-й день товара: ${goodsDeliverToday}`);
+		console.log(`Количество Необходимого в ${i}-й день товара: ${goodsNeedToday}`);
+		console.log(`Общее Количество Произведённого за ${i} дня товара: ${goodsProducedTotal}`);
+		console.log(`Общее Количество Необходимого за ${i} дня товара: ${goodsNeedTotal}`);
+		console.log(`Общее Количество Доставленного за ${i} дня товара: ${goodsDeliverTotal}`);
+		console.log(`Коэффициент Полезного Действия Посредника: ${KPDMiddleman}`);
+
+		if (i == Days) {
+
 		// ИТОГОВАЯ ТАБЛИЦА!!!
 		// Количество Произведённого за i-й день товара: goodsProducedToday
 		// Количество Необходимого в i-й день товара: goodsNeedToday
 		// Количество Доставленного за i-й день товара: goodsDeliverToday
-		// Кол-во Произведённого товара за последние 3 дня: goodsProduced_3_Day
-		// Кол-во Доставленного товара за последние 3 дня: goodsDeliver_3_Day
-		// Коэффициент Полезного Действия Посредника: KPD_Middleman
+		// Кол-во Произведённого товара за последние 3 дня: goodsProducedThreeDay
+		// Кол-во Доставленного товара за последние 3 дня: goodsDeliverThreeDay
+		// Коэффициент Полезного Действия Посредника: KPDMiddleman
+
+		console.log(`!!!ИТОГОВАЯ ТАБЛИЦА!!!`);
+		console.log(`Количество Произведённого за ${i}-й день товара: ${goodsProducedToday}`);
+		console.log(`Количество Необходимого в ${i}-й день товара:  ${goodsNeedToday}`);
+		console.log(`Количество Доставленного за i-й день товара: ${goodsDeliverToday}`);
+		console.log(`Кол-во Произведённого товара за последние 3 дня: ${goodsProducedThreeDay}`);
+		console.log(`Кол-во Доставленного товара за последние 3 дня: ${goodsDeliverThreeDay}`);
+		console.log(`Коэффициент Полезного Действия Посредника: ${KPDMiddleman}`);
 		}
 	}
-	return 0;
-} // завершение функции main
+	return;
+}
+
+Report();
