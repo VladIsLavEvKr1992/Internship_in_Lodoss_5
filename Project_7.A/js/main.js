@@ -2,114 +2,202 @@ $(document).ready(function () {
 
 });
 
-
 // Программа моделирует Учебный Курс, Курс Предполагает набор тем.
 // В каждой теме несколько вопросов, на каждый вопрос несколько ответов.
 // Правильных и неправильных.
 
-// Класс Курс - РАБОТАЕТ!!!
+// класс курс
 class Course {
-	constructor(theme) {
-		this.theme = theme;
+	constructor(courseName) {
+		this.courseName = courseName;
+		this.themes = [];
 	}
 
-	addTheme(theme) {
-		var themes = [];
-		themes.push(this.theme);
+	// записываем объект с темой в курс
+	setTheme(theme) {
+		this.themes.push(theme);
+	}
 
-		console.log(themes);
+	get getCourseName() {
+		return this.courseName;
 	}
 }
 
-// Класс Тема - РАБОТАЕТ!!!
+
+// класс тема
 class Theme {
-	constructor(question) {
-		this.question = question;
+	constructor(themeName) {
+		this.themeName = themeName;
+		this.questions = [];
 	}
 
-	addQuestion(question) {
-		var questions = [];
-		questions.push(this.question);
-		console.log(questions);
+	// записываем объект с вопросом в тему?
+	setQuestion(question) {
+		this.questions.push(question);
+	}
+
+	get getThemeName() {
+		return this.themeName;
 	}
 }
 
-
-// Класс Вопрос - РАБОТАЕТ!!!
+// класс вопрос
 class Question {
-	constructor(answer, correctAnswer) {
-		this.answer = answer;
-		this.correctAnswer = correctAnswer;
+	constructor(questionName) {
+		this.questionName = questionName;
+		this.answers = [];
 	}
 
-	addAnswer(answer, correctAnswer) {
-		var answers = [];
-		answers.push(this.answer);
-		answers.push(this.correctAnswer);
-		console.log(answers);
+	// записываем объект с ответом в вопрос
+	setAnswer(answer) {
+		this.answers.push(answer);
+		// return this; // для передачи контекста
+	}
+
+	get getQuestionName() {
+		return this.questionName;
+	}
+
+	get getAnswer() {
+		return this.answers;
 	}
 }
 
-// Класс Ответ - РАБОТАЕТ!!!
+// класс ответ
 class Answer {
 	constructor(answer, correctAnswer) {
 		this.answer = answer;
 		this.correctAnswer = correctAnswer;
 	}
+
+	get getAnswer() {
+		return [this.answer, this.correctAnswer];
+	}
 }
 
-
-/*
+// ввожу данные для темы
 function setData() {
-	var course = new Course(),
-	theme = new Theme();
+	var course = new Course("Первый курс."),
+	theme = new Theme("Первая тема."),
+	question = new Question("Первый вопрос?");
 
-	course.addTheme(theme);
+
+	var answerOne = new Answer("Первый ответ на Первый вопрос.", false);
+	var answerTwo = new Answer("Второй ответ на Первый вопрос.", true);
+	var answerThree = new Answer("Третий ответ на Первый вопрос.", false);
+
+	question.setAnswer(answerOne);
+	question.setAnswer(answerTwo);
+	question.setAnswer(answerThree);
+
+	theme.setQuestion(question);
+
+	course.setTheme(theme);
 	
-	new Theme("Первый вопрос?").addQuestion();
-
-	new Question("Первый ответ на Первый вопрос.", false).addAnswer();
-	new Question("Второй ответ на Первый вопрос.", true).addAnswer();
-	new Question("Третий ответ на Первый вопрос.", false).addAnswer();
-
-	new Theme("Второй вопрос?").addQuestion();
-
-	new Question("Первый ответ на Второй вопрос.", false).addAnswer();
-	new Question("Второй ответ на Второй вопрос.", true).addAnswer();
-	new Question("Третий ответ на Второй вопрос.", false).addAnswer();
-
-	new Theme("Третий вопрос?").addQuestion();
-
-	new Question("Первый ответ на Третий вопрос.", false).addAnswer();
-	new Question("Второй ответ на Третий вопрос.", true).addAnswer();
-	new Question("Третий ответ на Третий вопрос.", false).addAnswer();
-
-	return course;
+	console.log(course);
 }
 
 setData();
 
+
+/*
+// /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+ВТОРАЯ ВЕРСИЯ ПРОГРАММЫ 7.А
+
+// Класс курс
+class Course {
+	constructor(courseName) {
+		this.courseName = courseName;
+		this.themes = [];
+	}
+
+	// записываем объект с темой в курс
+	setThemeObject(theme) {
+		this.themes.push(theme);
+	}
+
+	get getCourseName() {
+		return this.courseName;
+	}
+}
+
+
+// Класс тема
+class Theme {
+	constructor(themeName) {
+		this.themeName = themeName;
+		this.questions = [];
+	}
+
+	// записываем объект с вопросом в тему?
+	setQuestionObject(question) {
+		this.questions.push(question);
+	}
+
+	get getThemeName() {
+		return this.themeName;
+	}
+}
+
+// Класс вопрос
+class Question {
+	constructor(questionName) {
+		this.questionName = questionName;
+		this.answers = [];
+	}
+
+	// записываем ответ в вопрос
+	setAnswer(answer, correctAnswer) {
+		this.answer = answer;
+		this.correctAnswer = correctAnswer;
+		this.answers.push([this.answer, this.correctAnswer]);
+		
+	}
+
+	// записываем объект с ответом в вопрос
+	setAnswerObject(answer) {
+		this.answers.push(answer);
+		// return this; // для передачи контекста
+	}
+
+	get getQuestionName() {
+		return this.questionName;
+	}
+
+	get getAnswer() {
+		return this.answers;
+	}
+}
+
+// Класс ответ
+class Answer {
+	constructor(answer, correctAnswer) {
+		this.answer = answer;
+		this.correctAnswer = correctAnswer;
+	}
+
+	get getAnswer() {
+		return [this.answer, this.correctAnswer];
+	}
+}
+
+// ввожу данные для темы
+function setData() {
+	var course = new Course("Первый курс."),
+	theme = new Theme("Первая тема."),
+	question = new Question("Первый вопрос?"),
+	answer = new Answer();
+
+	question.setAnswer("Первый ответ.", true);
+	question.setAnswer("Второй ответ.", false);
+	question.setAnswer("Третий ответ.", false);
+
+	theme.setQuestionObject(question);
+
+	course.setThemeObject(theme);
+	
+	console.log(course);
+}
+
+//setData();
 */
-
-function getResult() {
-	let course = new Course(),
-	theme = new Theme(),
-	question = new Question(),
-	answer = new Answer;
-
-	course.addTheme(theme);
-
-	theme.addQuestion(question);
-
-	question.addAnswer(answer);
-
-	setData(theme);
-}
-
-getResult();
-
-function setData(theme) {
-	new Theme("Первый вопрос?").addQuestion();
-
-
-}
