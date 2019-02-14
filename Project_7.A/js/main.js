@@ -1,11 +1,6 @@
-$(document).ready(function () {
-
-});
-
 // Программа моделирует Учебный Курс, Курс Предполагает набор тем.
 // В каждой теме несколько вопросов, на каждый вопрос несколько ответов.
 // Правильных и неправильных.
-
 
 // класс курс
 class Course {
@@ -13,31 +8,35 @@ class Course {
 		this.courseName = courseName;
 		this.themes = [];
 	}
-  
+
 	// записываем объект с темой в курс
-	setTheme(theme) {
+	addTheme(theme) {
 		this.themes.push(theme);
+	}
+
+	getCourseName() {
+		return this.courseName;
 	}
 }
 
-
-// Класс тема
-
+// класс тема
 class Theme {
 	constructor(themeName) {
 		this.themeName = themeName;
 		this.questions = [];
 	}
 
-
 	// записываем объект с вопросом в тему?
-	setQuestion(question) {
+	addQuestion(question) {
 		this.questions.push(question);
+	}
+
+	getThemeName() {
+		return this.themeName;
 	}
 }
 
 // класс вопрос
-
 class Question {
 	constructor(questionName) {
 		this.questionName = questionName;
@@ -45,67 +44,54 @@ class Question {
 	}
 
 	// записываем объект с ответом в вопрос
-	setAnswer(answer) {
+	addAnswer(answer) {
 		this.answers.push(answer);
 		// return this; // для передачи контекста
 	}
 
-	get getQuestionName() {
+	getQuestionName() {
 		return this.questionName;
 	}
 
-	get getAnswer() {
+	getAnswers() {
 		return this.answers;
 	}
 }
 
 // класс ответ
-
-	setAnswer(answer) {
-		this.answer = answer;
-		this.answers.push(this.answer);
-	}
-}
-
-// Класс ответ
-
 class Answer {
-	constructor(answer) {
+	constructor(answer, correctAnswer) {
 		this.answer = answer;
-		this.correctAnswers = []; // содержит true or false
-	}
-
-	isCorrect(correctAnswer) {
 		this.correctAnswer = correctAnswer;
-		this.correctAnswers.push(this.correctAnswer);
 	}
 
-	get getAnswer() {
+	getAnswer() {
 		return [this.answer, this.correctAnswer];
 	}
 }
 
 // ввожу данные для темы
-
 function setData() {
-	var course = new Course("Первый курс."),
-	theme = new Theme("Первая тема."),
-	question = new Question("Первый вопрос?");
+	var course = new Course("Первый курс."), 		// для ввода первичных данных из аргумента
+	theme = new Theme("Первая тема."), 					// для ввода первичных данных из аргумента
+	question = new Question("Первый вопрос?"); 	// для ввода первичных данных из аргумента
 
+	// для ввода первичных данных из аргумента
+	var answerOne = new Answer("Первый ответ на Первый вопрос.", false),
+	answerTwo = new Answer("Второй ответ на Первый вопрос.", true),
+	answerThree = new Answer("Третий ответ на Первый вопрос.", false);
 
-	var answerOne = new Answer("Первый ответ на Первый вопрос.", false);
-	var answerTwo = new Answer("Второй ответ на Первый вопрос.", true);
-	var answerThree = new Answer("Третий ответ на Первый вопрос.", false);
+	question.addAnswer(answerOne); // для передачи экземпляра объекта через аргумент
+	question.addAnswer(answerTwo);
+	question.addAnswer(answerThree);
 
-	question.setAnswer(answerOne);
-	question.setAnswer(answerTwo);
-	question.setAnswer(answerThree);
+	theme.addQuestion(question);
 
-	theme.setQuestion(question);
-
-	course.setTheme(theme);
+	course.addTheme(theme); // для передачи экземпляра объекта через аргумент
 	
 	console.log(course);
+	console.log(question.getAnswers()); // для считывания из экземпляра объекта значений
+	console.log(answerOne.getAnswer()); // для считывания из экземпляра объекта значения
 }
 
 setData();
